@@ -2,11 +2,20 @@ package com.example.ServerProject.repository;
 
 import com.example.ServerProject.models.Employee;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Repository;
-@Repository
+
+import java.util.List;
+import java.util.Optional;
+@EnableMongoRepositories
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
 
-    Employee findByEmployeeId(int id);
+    List<Employee> findByEmployeeId(String id);
+    Optional<Employee> findById(String id);
+
+
+
+
 
 
 }

@@ -3,13 +3,11 @@ package com.example.ServerProject.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
 
-@Entity
 @Document(collation = "employees")
 public class Employee {
     @Id
-    private int id;
+    private String employeeId;
     private String fname;
     private String lname;
     private String job;
@@ -24,8 +22,8 @@ public class Employee {
 
     }
 
-    public Employee(int id, String fname, String lname, String job, int mgr, String hiredate, double sal, double comm, int deptno) {
-        this.id = id;
+    public Employee(String employeeId, String fname, String lname, String job, int mgr, String hiredate, double sal, double comm, int deptno) {
+        this.employeeId = employeeId;
         this.fname = fname;
         this.lname = lname;
         this.job = job;
@@ -40,12 +38,12 @@ public class Employee {
     }
 
 
-    public int getId() {
-        return id;
+    public String getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getFname() {
@@ -115,7 +113,7 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "id=" + id +
+                "employeeId=" + employeeId +
                 ", fname='" + fname + '\'' +
                 ", lname='" + lname + '\'' +
                 ", job='" + job + '\'' +
