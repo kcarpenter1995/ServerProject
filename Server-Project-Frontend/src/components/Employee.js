@@ -6,7 +6,8 @@ import EmployeeService from "../services/EmployeeService";
 class Employee extends Component {
   constructor(props) {
     super(props);
-    this.onChangeFirstName = this.onChangeFirstName.bind(this);
+    this.onChangeEmployeeId = this.onChangeEmployeeId.bind(this);
+    this.onChangeFame = this.onChangeFirstName.bind(this);
     this.onChangeLastName = this.onChangeLastName.bind(this);
     this.getEmployee = this.getEmployee.bind(this);
     this.updateEmployee = this.updateEmployee.bind(this);
@@ -14,9 +15,9 @@ class Employee extends Component {
 
                 this.state = {
                 currentEmployee: {
-                    empno: null,
-                    fname: "",
-                    lname: "",
+                    employeeId: "",
+                    firstName: "",
+                    lastName: "",
                     job: "",
                     mgr: 0,
                     hiredate: "",

@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Employee {
     @Id
     private String employeeId;
-    private String fname;
-    private String lname;
+    private String firstName;
+    private String lastName;
     private String job;
     private int mgr;
     private String hiredate;
@@ -22,10 +22,10 @@ public class Employee {
 
     }
 
-    public Employee(String employeeId, String fname, String lname, String job, int mgr, String hiredate, double sal, double comm, int deptno) {
+    public Employee(String employeeId, String firstName, String lastName, String job, int mgr, String hiredate, double sal, double comm, int deptno) {
         this.employeeId = employeeId;
-        this.fname = fname;
-        this.lname = lname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.job = job;
         this.mgr = mgr;
         this.hiredate = hiredate;
@@ -46,20 +46,20 @@ public class Employee {
         this.employeeId = employeeId;
     }
 
-    public String getFname() {
-        return fname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLname() {
-        return lname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLname(String lname) {
-        this.lname = lname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getJob() {
@@ -114,8 +114,8 @@ public class Employee {
     public String toString() {
         return "Employee{" +
                 "employeeId=" + employeeId +
-                ", fname='" + fname + '\'' +
-                ", lname='" + lname + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", job='" + job + '\'' +
                 ", mgr=" + mgr +
                 ", hiredate='" + hiredate + '\'' +

@@ -61,7 +61,7 @@ public class ProjectController {
     @PostMapping("/employees")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
         try {
-            Employee employeeRep = employeeRepository.save(new Employee(employee.getEmployeeId(), employee.getFname(), employee.getLname(), employee.getJob(), employee.getMgr(), employee.getHiredate(), employee.getSal(), employee.getComm(), employee.getDeptno()));
+            Employee employeeRep = employeeRepository.save(new Employee(employee.getEmployeeId(), employee.getFirstName(), employee.getLastName(), employee.getJob(), employee.getMgr(), employee.getHiredate(), employee.getSal(), employee.getComm(), employee.getDeptno()));
             return new ResponseEntity<>(employeeRep, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,8 +75,8 @@ public class ProjectController {
         if (employeeData.isPresent()) {
             Employee employeeRep = employeeData.get();
             employeeRep.setEmployeeId(employee.getEmployeeId());
-            employeeRep.setFname(employee.getFname());
-            employeeRep.setLname(employee.getLname());
+            employeeRep.setFirstName(employee.getFirstName());
+            employeeRep.setLastName(employee.getLastName());
             employeeRep.setJob(employee.getJob());
             employeeRep.setMgr(employee.getMgr());
             employeeRep.setHiredate(employee.getHiredate());

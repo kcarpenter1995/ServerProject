@@ -1,39 +1,31 @@
-// import axios from "axios";
-
-import axios from "axios";
-
-
-const EMPLOYEE_REST_API_URL = "http://localhost:8080/application";
-
-// class EmployeeService {
-
-//     getEmployee() {
-//         return axios.get(EMPLOYEE_REST_API_URL);
-//     }
-// }
+import http from "../http-common";
 
 class EmployeeService {
     
     
-    getAllEmployees() {
-        return axios.get(`${EMPLOYEE_REST_API_URL}/employees`);
+    getAll() {
+        return http.get("/employees");
     }
 
-    getEmployeeById(empno) {
-        return axios.get(`${EMPLOYEE_REST_API_URL}/employees/${empno}`);
+    get(employeeId) {
+        return http.get(`/employees/${employeeId}`);
     }
     
-    createEmployee(employee) {
-        return axios.post(`${EMPLOYEE_REST_API_URL}/employees/add`, employee);
+    create(data) {
+        return http.post("/employees", data);
     }
     
-    updateEmployee(empno, employee) {
-        return axios.put(`${EMPLOYEE_REST_API_URL}/employees/update/${empno}`, employee);
+    update(employeeId, data) {
+        return http.put(`/employees/${employeeId}`, data);
     }
     
-    deleteEmployee(empno) {
-        return axios.delete(`${EMPLOYEE_REST_API_URL}/employees/delete/${empno}`);
+    delete(employeeId) {
+        return http.delete(`/employees/${employeeId}`);
     }      
+
+    deleteAll() {
+        return http.delete(`/employees`);
+    }
 }
 
 export default new EmployeeService();
