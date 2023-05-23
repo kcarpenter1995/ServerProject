@@ -1,106 +1,214 @@
-import React, { useState, useEffect } from "react";
+import React from "react";import { Link } from "react-router-dom";
 import EmployeeService from "../services/EmployeeService";
-import { Link } from "react-router-dom";
 
-const EmployeeList = () => {
+import E from "react-script";
 
+export default class EmployeeList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.retrieveEmployees = this.retrieveEmployees.bind(this);
+    this.refreshList = this.refreshList.bind(this);
+    this.setActiveEmployee = this.setActiveEmployee.bind(this);
+    this.removeAllEmployees = this.removeAllEmployees.bind(this);
+    this.searchName = this.searchName.bind(this);
+    this.onChangeSearchName = this.onChangeSearchName.bind(this);
 
-  const [employees, setEmployee] = useState([]);
+    this.state = {
+      employees: [],
+      currentEmployee: null,
+      currentIndex: -1,
+      searchName: ""
+    };
+  }
 
-  useEffect(() => {
+  componentDidMount() {
+    this.retrieveEmployees();
+  }
 
-    getAllEmployees();
-  }, [])
+  onChangeSearchName(e) {
+    const searchName = e.target.value;
 
+    this.setState({
+      searchName: searchName
+    });
+  }
 
-  const getAllEmployees = () => {
-    EmployeeService.getAllEmployees().then((response) => {
-        setEmployee(response.data)
+  retrieveEmployees() {
+    EmployeeService.getAll()
+      .then(response => {
+        this.setState({
+          employees: response.data
+        });
         console.log(response.data);
-    }).catch(error =>{
-        console.log(error);
-    })
-  }
-  
-  const deleteEmployee = (empno) => {
-    EmployeeService.deleteEmployee(empno).then((response) =>{
-     getAllEmployees();
-
-    }).catch(error =>{
-        console.log(error);
-    })
-     
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-    const handleUpdate = async (values) => {
-      console.log("empno:",values)
-      try {
-        await fetch(`employees/${values}`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'content-type': 'application/json'
-          } 
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-      }catch (error) {
-        console.error(error);
-      }
-    }
+  refreshList() {
+    this.retrieveEmployees();
+    this.setState({
+      currentEmployee: null,
+      currentIndex: -1
+    });
+  }
 
+  setActiveEmployee(employee, index) {
+    this.setState({
+      currentEmployee: employee,
+      currentIndex: index
+    });
+  }
 
+  removeAllEmployees() {
+    EmployeeService.deleteAll()
+      .then(response => {
+        console.log(response.data);
+        this.refreshList();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
 
-    
+  searchName() {
+    EmployeeService.findByName(this.state.searchName)
+      .then(response => {
+        this.setState({
+          employees: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  render() {
+    const { searchName, employees, currentEmployee, currentIndex } = this.state;
 
     return (
-      <div className="container">
-        <h2 className="text-center"> Employee List</h2>
-        <Link to ="/add-employee" className="btn btn-primary mb-2"> Add Employee</Link>
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th> Employee Id </th>
-              <th> First Name </th>
-              <th> Last Name </th>
-              <th> Job </th>
-              <th> Manager </th>
-              <th> Hire Date </th>
-              <th> Salary </th>
-              <th> Commission </th>
-              <th> Department Number </th>
-              <th> Actions </th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              employees.map(
-                employee =>
-                <tr key={employee.empno}>
-                  <th>{employee.empno}</th>
-                  <th>{employee.fname}</th>
-                  <th>{employee.lname}</th>
-                  <th>{employee.job}</th>
-                  <th>{employee.mgr}</th>
-                  <th>{employee.hiredate}</th>
-                  <th>{employee.sal}</th>
-                  <th>{employee.comm}</th>
-                  <th>{employee.deptno}</th>
-                  <th>
-                    <Link className="btn btn-info" to = {`/edit-employee/${employee.empno} `} onClick={e => { handleUpdate(employee.empno)}} >Update</Link>
-                    <button className = "btn btn-danger" onClick = {() => deleteEmployee(employee.empno)}
-                    style = {{marginLeft:"10px"}}>Delete</button>
-                  </th>
-                </tr>
-              )
-            }
-          </tbody>
-        </table>
+      <div className="list row">
+        <div className="col-md-8">
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search by employee name"
+              value={searchName}
+              onChange={this.onChangeSearchName}
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-outline-secondary"
+                type="button"
+                onClick={this.searchName}
+              >
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <h4>Employees List</h4>
+
+          <ul className="list-group">
+            {employees &&
+              employees.map((employee, index) => (
+                <li
+                  className={
+                    "list-group-item " +
+                    (index === currentIndex ? "active" : "")
+                  }
+                  onClick={() => this.setActiveEmployee(employee, index)}
+                  key={index}
+                >
+                  {employee.employeeId}
+                </li>
+              ))}
+          </ul>
+
+          <button
+            className="m-3 btn btn-sm btn-danger"
+            onClick={this.removeAllEmployees}
+          >
+            Remove All
+          </button>
+        </div>
+        <div className="col-md-6">
+          {currentEmployee ? (
+            <div>
+              <h4>Employee</h4>
+              <div>
+                <label>
+                  <strong>EmployeeId:</strong>
+                </label>{" "}
+                {currentEmployee.employeeId}
+            </div>
+            <div>
+                <label>
+                  <strong>First Name:</strong>
+                </label>{" "}
+                {currentEmployee.firstName}
+            </div>
+            <div>
+                <label>
+                  <strong>Last Name:</strong>
+                </label>{" "}
+                {currentEmployee.lastName}
+            </div>
+            <div>
+                <label>
+                  <strong>Job:</strong>
+                </label>{" "}
+                {currentEmployee.job}
+            </div>
+            <div>
+                <label>
+                  <strong>Manager:</strong>
+                </label>{" "}
+                {currentEmployee.mgr}
+            </div>
+            <div>
+                <label>
+                  <strong>Hire Date:</strong>
+                </label>{" "}
+                {currentEmployee.hireDate}
+            </div>
+            <div>
+                <label>
+                  <strong>Salary:</strong>
+                </label>{" "}
+                {currentEmployee.sal}
+            </div>
+            <div>
+                <label>
+                  <strong>Commission:</strong>
+                </label>{" "}
+                {currentEmployee.comm}
+            </div>
+            <div>
+                <label>
+                  <strong>Department:</strong>
+                </label>{" "}
+                {currentEmployee.deptno}
+            </div>
+              <Link
+                to={"/employees/" + currentEmployee.employeeId}
+                className="badge badge-warning"
+              >
+                Edit
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <br />
+              <p>Please click on an Employee...</p>
+            </div>
+          )}
+        </div>
       </div>
     );
-
-    
-    
+  }
 }
-
-export default EmployeeList;

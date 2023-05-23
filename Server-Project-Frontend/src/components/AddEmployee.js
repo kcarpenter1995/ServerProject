@@ -1,247 +1,274 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React from "react";
 import EmployeeService from "../services/EmployeeService";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as yup from 'yup';
-import Employee from "./Employee";
 
+export default class EmployeeList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onChangeEmployeeId = this.onChangeEmployeeId.bind(this);
+    this.onChangeFirstName = this.onChangeFirstName.bind(this);
+    this.onChangeLastName = this.onChangeLastName.bind(this);
+    this.onChangeJob = this.onChangeJob.bind(this);
+    this.onChangeMgr = this.onChangeMgr.bind(this);
+    this.onChangeHiredate = this.onChangeHiredate.bind(this); 
+    this.onChangeSal = this.onChangeSal.bind(this);
+    this.onChangeComm = this.onChangeComm.bind(this);
+    this.onChangeDeptno = this.onChangeDeptno.bind(this);
+    this.saveEmployee = this.saveEmployee.bind(this);
+    this.newEmployee = this.newEmployee.bind(this);
 
-const AddEmployee = () => {
-  const [employee, setEmployee] = useState({});
-  const [fname, setFname] = useState('');
-  const [lname, setLname] = useState('');
-  const [job, setJob] = useState('');
-  const [mgr, setMgr] = useState('');
-  const [hiredate, setHiredate] = useState('');
-  const [sal, setSal] = useState('');
-  const [comm, setComm] = useState('');
-  const [deptno, setDeptno] = useState('');
-  const {empno}= useParams();
-  useEffect(() => {
-
-  });
-  const history = useNavigate();
-
-  const saveOrUpdateEmployee = (e) => {
-    e.preventDefault();
-
-    const employee = {fname, lname, job,mgr, hiredate, sal, comm, deptno}
-
-    if(empno){
-        EmployeeService.updateEmployee(empno, employee).then((response) => {
-            history.push('/employees')
-        }).catch(error => {
-            console.log(error)
-        })
-
-    }else{
-        EmployeeService.createEmployee(employee).then((response) =>{
-
-            console.log(response.data)
-
-            history.push('/employees');
-
-        }).catch(error => {
-            console.log(error)
-        })
-    }
-    
+    this.state = {
+      employeeId: null,
+      firstName: "",
+      lastName: "",
+      job: "",
+      mgr: null,
+      hiredate: "",
+      sal: null,
+      comm: null,
+      deptno: null,
+      submitted: false
+    }; 
   }
 
-  useEffect(() => {
-    // fetch((`http://localhost:8080/application/employees/${empno}`))
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     setEmployee(data);
-    //     const { fname, lname, job, mgr, hiredate, sal, comm, deptno } = data;
-    //     setFname(fname);
-    //     setLname(lname); 
-    //     setJob(job); 
-    //     setMgr(mgr); 
-    //     setHiredate(hiredate); 
-    //     setSal(sal); 
-    //     setComm(comm); 
-    //     setDeptno(deptno);  
-
-          EmployeeService.getEmployeeById(empno).then((response) =>{
-            setFname(response.data.fname)
-            setLname(response.data.lastName)
-            setJob(response.data.job); 
-            setMgr(response.data.mgr); 
-            setHiredate(response.data.hiredate); 
-            setSal(response.data.sal); 
-            setComm(response.data.comm); 
-            setDeptno(response.data.deptno);  
-          }).catch(error => {
-            console.log(error)
-          })
-         
-    }, [empno]);
-
-  const title = () => {
-
-    if(empno){
-      return <h2 className="text-center"> Update Employee </h2>
-    } else {
-      return <h2 className="text-center"> Add Employee </h2>
-    }
+  onChangeEmployeeId(e) {
+    this.setState({
+      employeeId: e.target.value
+    });
   }
 
- 
-  const initialValues = {
-    empno: 0,
-    fname: '',
-    lname: '',
-    job: '',
-    mgr: 0,
-    hiredate: '',
-    sal: 0.0,
-    comm: 0.0,
-    deptno: 0
-  };
+  onChangeFirstName(e) { 
+    this.setState({
+      firstName: e.target.value
+    });
+  }
 
-  
+  onChangeLastName(e) {
+    this.setState({
+      lastName: e.target.value
+    });
+  }
 
-  const validationSchema = yup.object().shape({
-    empno: yup.number()
-      .integer()
-      .required('Empno is required'),
-  fname: yup.string()
-    .required('First name is required'),
-  lname: yup.string()
-    .required('Last name is required'),
-  job: yup.string()
-    .required('Job is required'),
-  mgr: yup.number()
-    .integer(),
-  hiredate: yup.string()
-    .required('Hire date is required'),
-  sal: yup.number()
-    .required('Salary is required')
-    .positive('Salary must be a positive number'),
-  comm: yup.number()
-    .positive('Commission must be a positive number'),
-  deptno: yup.number()
-    .integer()
-    .required('Department number is required'),
-  });
+  onChangeJob(e) {
+    this.setState({
+      job: e.target.value
+    });
+  }
 
-  const handleSubmit = async (values, { setSubmitting, resetForm}) => {
-    setSubmitting(true);
+  onChangeMgr(e) {
+    this.setState({
+      mgr: e.target.value
+    });
+  }
 
-    try {
-      const response = await fetch(`employees/${empno}`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        }, 
-        body: JSON.stringify(values)
+  onChangeHiredate(e) {
+    this.setState({
+      hiredate: e.target.value
+    });
+  }
+
+  onChangeSal(e) {
+    this.setState({
+      sal: e.target.value
+    });
+  }
+
+  onChangeComm(e) {
+    this.setState({
+      comm: e.target.value
+    });
+  }
+
+  onChangeDeptno(e) {
+    this.setState({
+      deptno: e.target.value
+    });
+  }
+
+  saveEmployee() {
+    var data = {
+      employeeId: this.state.employeeId,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      job: this.state.job,
+      mgr: this.state.mgr,
+      hiredate: this.state.hiredate,
+      sal: this.state.sal,
+      comm: this.state.comm,
+      deptno: this.state.deptno
+    };
+
+    EmployeeService.create(data)
+      .then(response => {
+        this.setState({
+          employeeId: response.data.employeeId,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          job: response.data.job,
+          mgr: response.data.mgr,
+          hiredate: response.data.hiredate,
+          sal: response.data.sal,
+          comm: response.data.comm,
+          deptno: response.data.deptno,
+          submitted: true
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
       });
-
-      const data = await response.json();
-      console.log(data);
-
-      resetForm({});
-      setSubmitting(false);
-    } catch (error) {
-      console.error(error);
-      setSubmitting(false);
-    }
   }
- 
 
-  
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            {
-                  title()
-                }
-                
+  newEmployee() {
+    this.setState({
+      employeeId: null,
+      firstName: "",
+      lastName: "",
+      job: "",
+      mgr: null,
+      hiredate: "",
+      sal: null,
+      comm: null,
+      deptno: null,
+      submitted: false
+    });
+  }
 
-                    <div className="form-group mb-2">
-                      
-                        <Field
-                            type = "text"
-                            placeholder = "Enter first name"
-                            name = "fname"
-                            className = "form-control"
-                        
-                        />
-                        
-                        <Field
-                            type = "text"
-                            placeholder = "Enter last name"
-                            name = "lname"
-                            className = "form-control"
-                          
-                        />
-                        <Field
-                            type = "text"
-                            placeholder = "Enter job"
-                            name = "job"
-                            className = "form-control"
-                            
-                        />
-                        
-                        <Field
-                            type = "text"
-                            placeholder = "Enter manager name"
-                            name = "mgr"
-                            className = "form-control"
-                            
-                        />
-                        
-                        <Field
-                            type = "text"
-                            placeholder = "Enter hiredate"
-                            name = "hiredate"
-                            className = "form-control"
-                            
-                        />
-                        
-                        <Field
-                            type = "text"
-                            placeholder = "Enter salary amount"
-                            name = "sal"
-                            className = "form-control"
-                            
-                        />
-                        
-                        <Field
-                            type = "text"
-                            placeholder = "Enter commission amount"
-                            name = "comm"
-                            className = "form-control"
-                            
-                        />
-                        
-                        <Field
-                            type = "text"
-                            placeholder = "Enter Department Number"
-                            name = "deptno"
-                            className = "form-control"
-                            
-                        />
-                        
-                    </div>
-                      <button className = "btn btn-success" onClick = {(e) => saveOrUpdateEmployee(e)} >Submit </button>
-                      <Link to="/employees" className="btn btn-danger"> Cancel </Link>
-                  </Form>
+  render() {
+    return (
+      <div className="submit-form">
+        {this.state.submitted ? (
+          <div>
+            <h4>You submitted successfully!</h4>
+            <button className="btn btn-success" onClick={this.newEmployee}>
+              Add
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div className="form-group">
+              <label htmlFor="employeeId">Employee ID</label>
+              <input
+                type="text"
+                className="form-control"
+                id="employeeId"
+                required
+                value={this.state.employeeId}
+                onChange={this.onChangeEmployeeId}
+                name="employeeId"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="firstName">First Name</label>
+              <input
+                type="text"
+                className="form-control"
+                id="firstName"
+                required
+                value={this.state.firstName}
+                onChange={this.onChangeFirstName}
+                name="firstName"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="lastName">Last Name</label>
+              <input
+                type="text"
+                className="form-control"
+                id="lastName"
+                required
+                value={this.state.lastName}
+                onChange={this.onChangeLastName}
+                name="lastName"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="job">Job</label>
+              <input
+                type="text"
+                className="form-control"
+                id="job"
+                required
+                value={this.state.job}
+                onChange={this.onChangeJob}
+                name="job"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="mgr">Manager</label>
+              <input
+                type="text"
+                className="form-control"
+                id="mgr"
+                required
+                value={this.state.mgr}
+                onChange={this.onChangeMgr}
+                name="mgr"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="hiredate">Hire Date</label>
+              <input
+                type="text"
+                className="form-control"
+                id="hiredate"
+                required
+                value={this.state.hiredate}
+                onChange={this.onChangeHiredate}
+                name="hiredate"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="sal">Salary</label>
+              <input
+                type="text"
+                className="form-control"
+                id="sal"
+                required
+                value={this.state.sal}
+                onChange={this.onChangeSal}
+                name="sal"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="comm">Commission</label>
+              <input
+                type="text"
+                className="form-control"
+                id="comm"
+                required
+                value={this.state.comm}
+                onChange={this.onChangeComm}
+                name="comm"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="deptno">Department</label>
+              <input
+                type="text"
+                className="form-control"
+                id="deptno"
+                required
+                value={this.state.deptno}
+                onChange={this.onChangeDeptno}
+                name="deptno"
+              />
+            </div>
+            
+            <button onClick={this.saveEmployee} className="btn btn-success">
+              Submit
+            </button>
+          </div>
         )}
-       
-                
-                
-    </Formik>
-        
-  )
+      </div>
+    );
+  }
   
 }
-
-export default AddEmployee

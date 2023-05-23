@@ -26,6 +26,10 @@ class EmployeeService {
     deleteAll() {
         return http.delete(`/employees`);
     }
+
+    findByName(firstName) {
+        return http.get(`/employees?firstName=${firstName}`);
+    }
 }
 
 export default new EmployeeService();
