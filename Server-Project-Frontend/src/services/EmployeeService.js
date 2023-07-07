@@ -1,35 +1,29 @@
-import http from "../http-common";
+// import axios from "axios";
 
-class EmployeeService {
+// const EMPLOYEE_API_BASE_URL =  "http://localhost:8080/api/employees"
+
+
     
     
-    getAll() {
-        return http.get("/employees");
-    }
+//     function getEmployees() {
+//         return axios.get(EMPLOYEE_API_BASE_URL);
+//     }
 
-    get(employeeId) {
-        return http.get(`/employees/${employeeId}`);
-    }
+//     function getEmployeeByIdEmployee(id) {
+//         return axios.get(EMPLOYEE_API_BASE_URL + '/' + id);
+//     }
     
-    create(data) {
-        return http.post("/employees", data);
-    }
+//     function createEmployee(employee) {
+//         return axios.get(EMPLOYEE_API_BASE_URL, employee);
+//     }
     
-    update(employeeId, data) {
-        return http.put(`/employees/${employeeId}`, data);
-    }
+//     function updateEmployee(employee, id) {
+//         return axios.get(EMPLOYEE_API_BASE_URL + '/' + id, employee);
+//     }
     
-    delete(employeeId) {
-        return http.delete(`/employees/${employeeId}`);
-    }      
+//     function deleteEmployee(id) {
+//         return axios.get(EMPLOYEE_API_BASE_URL + '/' + id);
+//     }      
 
-    deleteAll() {
-        return http.delete(`/employees`);
-    }
-
-    findByName(firstName) {
-        return http.get(`/employees?firstName=${firstName}`);
-    }
-}
-
-export default new EmployeeService();
+    
+// export default {getEmployees, getEmployeeByIdEmployee, createEmployee, updateEmployee, deleteEmployee}
